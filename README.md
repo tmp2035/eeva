@@ -70,6 +70,17 @@ python3 experiment_helpers/run_config.py ../experiment_configs/exp_configs scan_
 
 if second argument is not provided programm will run for all `yaml` files in provided directory.
 
+### Without docker
+
+Make folders to save experiments and run experiment:
+
+```bash
+mkdir runs runs/data runs/run_results
+python3 experiment_helpers/run_config.py path_to_configs_folder [config_name]
+```
+
+More things that you can run in `/experiment_helpers/script_user.ipynb`
+
 ## Configuration File
 
 The project uses a configuration file in YAML format to specify experiment parameters. Here is an example of the configuration file:
