@@ -1,4 +1,3 @@
-
 def extract_dataname(datapath: str) -> str:
     """
     https://github.com/1a1a11a/libCacheSim/scripts/utils/trace_utils.py

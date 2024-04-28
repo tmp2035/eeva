@@ -2,20 +2,17 @@
 """
     An abstract cache for cache replacement algorithms
     cache algorithm template from https://github.com/1a1a11a/PyMimircache
-    Author: Jason Yang <peter.waynechina@gmail.com> 2016/05    
+    Author: Jason Yang <peter.waynechina@gmail.com> 2016/05
 """
-from numba import jit
 import abc
+
 import numpy as np
+from numba import jit
+
 
 class Cache:
     __metaclass__ = abc.ABCMeta
-    all = ["access",
-           "get",
-           "access",
-           "evict",
-           "_update",
-           "_insert"]
+    all = ["access", "get", "access", "evict", "_update", "_insert"]
 
     def __init__(self, cache_size, **kwargs):
         self.cache_size = cache_size
@@ -23,10 +20,10 @@ class Cache:
             raise RuntimeError("cache size cannot be smaller than or equal 0")
 
     @staticmethod
-    @jit(nopython=True) 
+    @jit(nopython=True)
     def get_min(arr, ind):
         return np.argmin(arr[:, ind])
-    
+
     @abc.abstractmethod
     def evict(self, **kwargs):
         """
@@ -59,7 +56,7 @@ class Cache:
 
     @abc.abstractmethod
     def _update(self, req_item, **kwargs):
-        """ the given element is in the cache, now update it, the following information will be updated
+        """the given element is in the cache, now update it, the following information will be updated
         cache replacement algorithm related metadata
         real request data (not used in current version)
 

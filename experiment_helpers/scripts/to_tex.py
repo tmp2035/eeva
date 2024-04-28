@@ -1,11 +1,8 @@
-from string import Template
-from pathlib import Path
 import shutil
-import os
+from pathlib import Path
+from string import Template
 
-import os
-
-TEMPLATE= '''
+TEMPLATE = """
 \begin{figure*}[!ht]
     \centering
     \begin{subfigure}{$w1\linewidth}
@@ -14,16 +11,17 @@ TEMPLATE= '''
     \begin{subfigure}{$w2\linewidth}
         \includegraphics[width=\textwidth]{figures/experiments/$p2}
     \end{subfigure}
-    
+
     \caption{$caption}
     \label{fig::$label}
 \end{figure*}
-'''
+"""
 
-def prepare_for_tex(experiment_paths = None, to_save_path = Path("../run_plots/")):
+
+def prepare_for_tex(experiment_paths=None, to_save_path=Path("../run_plots/")):
     if experiment_paths is None:
         path = Path("../run_results")
-        experiment_paths = [ p for p in path.rglob("") if p.parts[-1].startswith("scan")]
+        experiment_paths = [p for p in path.rglob("") if p.parts[-1].startswith("scan")]
 
     assert to_save_path.exists(), "Provided path to save is not exist"
     assert all(p.exists() for p in experiment_paths), "Provided experiment paths is is not exist"
@@ -42,12 +40,18 @@ def prepare_for_tex(experiment_paths = None, to_save_path = Path("../run_plots/"
         pair_name = f"{pair.parts[-2]}_{pair.parts[-1]}"
         cost_name = f"{cost.parts[-2]}_{cost.parts[-1]}"
         print(pair)
-        shutil.copyfile(pair, to_save_path/pair_name)
-        shutil.copyfile(cost, to_save_path/cost_name)
+        shutil.copyfile(pair, to_save_path / pair_name)
+        shutil.copyfile(cost, to_save_path / cost_name)
 
-        caption = 'Figure for \"{}\"  generated data'.format(pair.parts[-2].translate({ord("_"): ord(" ")}))
-        tv = {"p1": str(cost_name), "p2": str(pair_name), "w1": 0.3, "w2": 0.6, 
-            "caption": caption, "label": pair.parts[-2]}
+        caption = 'Figure for "{}"  generated data'.format(pair.parts[-2].translate({ord("_"): ord(" ")}))
+        tv = {
+            "p1": str(cost_name),
+            "p2": str(pair_name),
+            "w1": 0.3,
+            "w2": 0.6,
+            "caption": caption,
+            "label": pair.parts[-2],
+        }
         template_values.append(tv)
 
     txts = []

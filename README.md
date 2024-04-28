@@ -14,11 +14,11 @@ To build and install the package with full functionality, follow these steps:
 
 1. Copy the `Dockerfile` from our repository.
 2. Build the Docker image using the following command:
-   ```shell
-   docker build -t 1a1a11a/libcachesim -f dockerfile .
+   ```bash
+   docker build -t cache_server -f Dockerfile .
    ```
 3. Run the Docker container:
-   ```shell
+   ```bash
    docker run -it --name=libcache 1a1a11a/libcachesim:latest bash
    ```
 
@@ -30,15 +30,48 @@ If you prefer not to use Docker or only need the Python functionality, follow th
 
 1. Ensure you have Python 3.11 installed.
 2. Setup the project using Poetry:
-   ```shell
+
+   ```bash
    poetry build
    ```
+
    or using setup.py:
-   ```shell
+
+   ```bash
    pip install -e . --force-reinstall
    ```
 
+## Usage Guideline
+
+since there are two abilities to install there are two guidlines how compute experiment:
+
+### With docker
+
+There we make directory `runs` to save results outside docker. Connect to the docker via concole:
+
+```bash
+mkdir runs runs/data runs/run_results && \
+      docker run -v ./runs:/runs -it --name=cache_sim cache_server:latest bash
+```
+
+And inside it choose and run experiment for some configs:
+
+```bash
+cd cache
+python3 experiment_helpers/run_config.py path_to_configs_folder [config_name]
+```
+
+For example:
+
+```bash
+cd cache
+python3 experiment_helpers/run_config.py ../experiment_configs/exp_configs scan_eq_get
+```
+
+if second argument is not provided programm will run for all `yaml` files in provided directory.
+
 ## Configuration File
+
 The project uses a configuration file in YAML format to specify experiment parameters. Here is an example of the configuration file:
 
 ```yaml
@@ -106,22 +139,38 @@ Here's a description of each parameter in the configuration file:
    - `move_cost`: Cost of moving.
    - `return_trace_hit`: Whether to return trace hits.
 
-## Data Generation Procedure:
+## Data Generation Procedure and trace structure
+
+### Generation
+
+Generation occures in `cache/utils/req_generator.py`
 
 To generate requests we do the following:
 
-1. We generate a set of tables $\mathcal{T}$ such that every table contains $P_i$ pages, where $i=1,\ldots,|\mathcal{T}|$. In the experiments, we use $|\mathcal{T}| = 50$ and $P_i \sim \mathcal{U}([P_{\max} / 2, P_{\max}])$, where $P_{\max}$ is the maximum number of pages per table, and we consider a setup where $P_{\max} = 1000$.
+   1. Database generation. We generate a set of tables $\mathcal{T}$ such that every table contains $P_i$ pages, where $i=1,\ldots,$`num_tables`. For every table we generate number of pages $P_i\sim \mathcal{U}([P_{\max} / 2, P_{\max}])$, where $P_{\max}$=`max_pages`. Every table provided with probability to be scanned and probability to be getted.
+   2. To generate queries we iteratively for `num_requests` do the following:
+      - choose query type. P[scan] = `p_scan`, P[get] = 1 - `p_scan`
+      - choose table with its probability to be selected with this type of query
+      - if *scan* we scan all pages, if *get* we choose page according to Zipf distribution with parameter `q` on pages of this table.
 
-Since we test both \texttt{get}-type and \texttt{scan}-type queries, we introduce the probability of the \texttt{scan}-type query $p_{scan} = 0.002$, i.e., a \texttt{scan}-type query is quite a rare event.
+### Trace structure
 
-We consider a trace of queries $Q = \{ q_1, \ldots, q_N\}$, where every query $q_i$ is a set of the queried pages by scan or get operation. Denote by $SQ_i$ and $GQ_i$ the sets of pages from query $q_i$ processed by scan and get operations, respectively, i.e. $q_i = SQ_i \sqcup GQ_i$.
+Generated trace is a sequence of entries:
 
-## Usage Guideline
+```csv
+   pg_id;req_info
+   3349;('get', 33, 49, 72, 1)
+   4584;('get', 45, 84, 93, 1)
+   3473;('get', 34, 73, 82, 1)
+   100;('scan_all', 1, 0, 58, 1)
+   101;('scan_all', 1, 1, 58, 1)
+   102;('scan_all', 1, 2, 58, 1)
+   103;('scan_all', 1, 3, 58, 1)
+```
 
-To run experiments select the
+where `req_info = (query type, table number, page index, table size, is_durty bit)` tuple.
 
-1. ...
-2. ...
+Last entry is for future work. For current realization it is important, that scan occures sequentally.
 
 ## Code Structure
 
@@ -162,10 +211,5 @@ And there are functions to run experiments:
     ├── script_user.ipynb
     └── scripts/
 
-
 - `./cache/`: Contains the main project code.
 - `./experiment_helpers/`: Contains scripts and utilities for running experiments.
-
-## Project Overview
-
-This project implements caching algorithms described in the paper. It provides implementations of various cache eviction strategies and utilities for running experiments to compare their performance.

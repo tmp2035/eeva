@@ -3,13 +3,12 @@
     this class is a template for eeva and eeva-greedy.
     they differ only while selecting victim
 """
-from numba import jit
-from random import randint
-import numpy as np
+from collections import defaultdict
 from dataclasses import dataclass
+
+import numpy as np
 import scipy
 
-from collections import OrderedDict, deque, defaultdict
 from .abstractCache import Cache
 from .requestItem import Req, parse_info
 
@@ -17,11 +16,13 @@ from .requestItem import Req, parse_info
 @dataclass
 class cache_item:
     """
-    this class is to demonstrate how items saved in cache 
+    this class is to demonstrate how items saved in cache
     """
+
     req_id: int = -1
     weight: float = 1.0
     age: int = 0
+
 
 REQ_ID = 0
 WEIGHT = 1
@@ -40,14 +41,14 @@ class PROPOSED(Cache):
     self.cacheline_dict [item_id: item_pos]
     self.cacheline_deq [item_pos: (req_id, weight, last_call_step)]
     """
-    def __init__(self, cache_size, alpha , beta , with_min = False, **kwargs):
+
+    def __init__(self, cache_size, alpha, beta, with_min=False, **kwargs):
         super(PROPOSED, self).__init__(cache_size, **kwargs)
         self.cacheline_list = -np.ones(shape=(cache_size, 3), dtype=float)
-        self.table_weights = defaultdict(lambda: 1.)
+        self.table_weights = defaultdict(lambda: 1.0)
         self.cacheline_dict = dict()
         self.hand = 0
         self.with_min = with_min
-
 
         self.alpha = alpha
         self.beta = beta
@@ -61,12 +62,13 @@ class PROPOSED(Cache):
 
     def _normalize(self):
         mm = max(self.table_max, self.page_max)
-        if mm > self.max_value :
+        if mm > self.max_value:
             self.cacheline_list[:, WEIGHT] /= mm
             for key in self.table_weights.keys():
                 self.table_weights[key] = self.table_weights[key] / mm
             self.table_max = self.table_max / mm
             self.page_max = self.page_max / mm
+
     def has(self, req_id, **kwargs):
         """
         check whether the given id in the cache or not
@@ -81,20 +83,21 @@ class PROPOSED(Cache):
     def _get_init_weight(self, req_item):
         _, table_num, _, _ = parse_info(req_item.info)
         return self.table_weights[table_num]
+
     def _update_init_weight(self, req_item):
         req_type, table_num, pg_ind, table_size = parse_info(req_item.info)
         if req_type == "scan_all":
-            if self._scan_proccessing == False and pg_ind == 0:
+            if self._scan_proccessing is False and pg_ind == 0:
                 self._scan_proccessing = True
-            if self._scan_proccessing == True and pg_ind == table_size - 1:
+            if self._scan_proccessing is True and pg_ind == table_size - 1:
                 self.table_weights[table_num] += self.beta
         else:
             self._scan_proccessing = False
-            self.table_weights[table_num] += + 1./table_size * self.alpha
+            self.table_weights[table_num] += +1.0 / table_size * self.alpha
         self.table_max = max(self.table_max, self.table_weights[table_num])
-    
+
     def _update(self, req_item, **kwargs):
-        """ the given element is in the cache,
+        """the given element is in the cache,
         now update cache metadata and its content
 
         :param **kwargs:
@@ -110,11 +113,14 @@ class PROPOSED(Cache):
 
         req_type, table_num, _, table_size = parse_info(req_item.info)
 
-        self.cacheline_list[list_pos][[WEIGHT, AGE]] = np.array([
-            self.cacheline_list[list_pos][1] + \
-                self.beta * (req_type == "scan_all") + \
-                    self.alpha * (req_type == "get"),
-                        self.step])
+        self.cacheline_list[list_pos][[WEIGHT, AGE]] = np.array(
+            [
+                self.cacheline_list[list_pos][1]
+                + self.beta * (req_type == "scan_all")
+                + self.alpha * (req_type == "get"),
+                self.step,
+            ]
+        )
 
     def _insert(self, req_item, w, **kwargs):
         """
@@ -135,9 +141,11 @@ class PROPOSED(Cache):
 
         self.cacheline_list[self.hand] = np.array([req_id, w, self.step])
         self.hand = (self.hand + 1) % self.cache_size
- 
 
-    def evict(self, w,):
+    def evict(
+        self,
+        w,
+    ):
         """
         evict one cacheline from the cache
 
@@ -151,9 +159,9 @@ class PROPOSED(Cache):
             # this is for EEvA-greedy
             victim = np.argmin(self.cacheline_list[:, WEIGHT])
         else:
-            # this is for EEvA 
-            p = scipy.special.softmax(-self.cacheline_list[:,WEIGHT])
-            victim = np.random.choice(range(len(self.cacheline_list)), p = p)
+            # this is for EEvA
+            p = scipy.special.softmax(-self.cacheline_list[:, WEIGHT])
+            victim = np.random.choice(range(len(self.cacheline_list)), p=p)
 
         self.cacheline_dict.pop(int(self.cacheline_list[victim][REQ_ID]))
         self.hand = victim
@@ -187,10 +195,10 @@ class PROPOSED(Cache):
             w = self._get_init_weight(req_item)
             if len(self.cacheline_dict) >= self.cache_size:
                 llen = len(self.cacheline_dict)
-                evict_item = self.evict(w)
+                _ = self.evict(w)
                 assert llen > len(self.cacheline_dict), "item is not deleted"
             self._insert(req_item, w)
-            
+
             self._update_init_weight(req_item)
             return False
 
@@ -201,18 +209,17 @@ class PROPOSED(Cache):
         return len(self.cacheline_dict)
 
     def __repr__(self):
-        return "LRU cache of size: {}, current size: {}".\
-            format(self.cache_size, len(self.cacheline_dict))
-    
+        return "LRU cache of size: {}, current size: {}".format(self.cache_size, len(self.cacheline_dict))
+
     @property
     def name(self):
         if hasattr(self, "_name"):
             return self._name
         else:
-            print('vtf man??')
+            print("vtf man??")
             raise ValueError()
         # return f"PROPOSED:{self.alpha=}_{self.beta=}"
 
     @name.setter
     def name(self, n):
-        self._name  = n
+        self._name = n

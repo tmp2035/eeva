@@ -1,2 +1,3 @@
-from . import config_setter
-from . import to_tex
+from . import config_setter, to_tex
+
+_, _ = config_setter, to_tex

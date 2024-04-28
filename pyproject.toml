@@ -20,9 +20,37 @@ ipywidgets = "^8.1.2"
 numba = "^0.59.1"
 tqdm = "^4.66.2"
 dvc-gdrive = "^3.0.1"
+pre-commit = "^3.7.0"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.6.2"
+
+
+[tool.black]
+line-length = 120
+target-version = ["py39"]
+
+[tool.flake8]
+max-line-length = 120
+
+
+[tool.isort]
+atomic = true
+profile = "black"
+line_length = 130
+skip_gitignore = true
+
+[tool.nbqa.config]
+black = "pyproject.toml"
+isort = "pyproject.toml"
+flake8 = "pyproject.toml"
+
+[tool.nbqa.addopts]
+flake8 = ["--extend-ignore=E402"]
+
+[tool.nbqa.mutate]
+black = 1
+isort = 1
 
 [build-system]
 requires = ["poetry-core"]

@@ -2,7 +2,7 @@ data/**
 run_results/*
 run_grid/*
 run_plots/*
-experiment_configs/*
+# experiment_configs/*
 *__pycache__*
 /experiment_configs
 /run_grid

@@ -1,24 +1,21 @@
 # coding=utf-8
 
 
+from collections import defaultdict
 
-
-from random import randint
 import numpy as np
-from dataclasses import dataclass
 
-
-from collections import OrderedDict, deque, defaultdict
 from .abstractCache import Cache
 from .requestItem import Req, parse_info
-
 
 REQ_ID = 0
 WEIGHT = 1
 AGE = 2
 
+
 def dict_def_val():
-    return 1.
+    return 1.0
+
 
 class EEvASeq(Cache):
     """
@@ -33,7 +30,7 @@ class EEvASeq(Cache):
     self.cacheline_deq [item_pos: (req_id, weight, last_call_step)]
     """
 
-    def __init__(self, cache_size,alpha , beta, move_cost,  verbose = False, **kwargs):
+    def __init__(self, cache_size, alpha, beta, move_cost, verbose=False, **kwargs):
         self.scans = 0
         super(EEvASeq, self).__init__(cache_size, **kwargs)
         self.cacheline_list = -np.ones(shape=(cache_size, 3), dtype=float)
@@ -41,11 +38,10 @@ class EEvASeq(Cache):
         self.cacheline_dict = dict()
         self.hand = 0
 
-
         self.alpha = alpha
         self.beta = beta
         self.move_cost = move_cost
-        self.cache_sum = 0. 
+        self.cache_sum = 0.0
         self.step = 0
 
         self.table_max = -1
@@ -63,12 +59,13 @@ class EEvASeq(Cache):
 
     def _normalize(self):
         mm = max(self.table_max, self.page_max)
-        if mm > self.max_value :
+        if mm > self.max_value:
             self.cacheline_list[:, WEIGHT] /= mm
             for key in self.table_weights.keys():
                 self.table_weights[key] = self.table_weights[key] / mm
             self.table_max = self.table_max / mm
             self.page_max = self.page_max / mm
+
     def has(self, req_id, **kwargs):
         """
         check whether the given id in the cache or not
@@ -83,20 +80,21 @@ class EEvASeq(Cache):
     def _get_init_weight(self, req_item):
         req_type, table_num, _, _ = parse_info(req_item.info)
         return self.table_weights[table_num]
+
     def _update_init_weight(self, req_item):
         req_type, table_num, pg_ind, table_size = parse_info(req_item.info)
         if req_type == "scan_all":
-            if self._scan_proccessing == False and pg_ind == 0:
+            if self._scan_proccessing is False and pg_ind == 0:
                 self._scan_proccessing = True
-            if self._scan_proccessing == True and pg_ind == table_size - 1:
+            if self._scan_proccessing is True and pg_ind == table_size - 1:
                 self.table_weights[table_num] += self.beta
         else:
             self._scan_proccessing = False
-            self.table_weights[table_num] += + 1./table_size * self.alpha
+            self.table_weights[table_num] += +1.0 / table_size * self.alpha
         self.table_max = max(self.table_max, self.table_weights[table_num])
-    
+
     def _update(self, req_item, **kwargs):
-        """ the given element is in the cache,
+        """the given element is in the cache,
         now update cache metadata and its content
 
         :param **kwargs:
@@ -112,12 +110,9 @@ class EEvASeq(Cache):
 
         req_type, table_num, _, table_size = parse_info(req_item.info)
 
-        delta = self.beta * (req_type == "scan_all") + \
-                self.alpha * (req_type == "get")
+        delta = self.beta * (req_type == "scan_all") + self.alpha * (req_type == "get")
         self.cache_sum += delta
-        self.cacheline_list[list_pos][[WEIGHT, AGE]] = np.array([
-            self.cacheline_list[list_pos][1] + delta,
-                        self.step])
+        self.cacheline_list[list_pos][[WEIGHT, AGE]] = np.array([self.cacheline_list[list_pos][1] + delta, self.step])
 
     def _insert(self, req_item, w, **kwargs):
         """
@@ -150,16 +145,16 @@ class EEvASeq(Cache):
         :return: id of evicted cacheline
         """
 
-        threshold = (self.cache_sum /(self.step)  + self.move_cost)/len(self.cacheline_dict)
+        threshold = (self.cache_sum / (self.step) + self.move_cost) / len(self.cacheline_dict)
         pos = self.hand
         victim = self.hand
         i = 0
-        while self.cacheline_list[pos][WEIGHT]/self.step > threshold:
+        while self.cacheline_list[pos][WEIGHT] / self.step > threshold:
             pos = (pos + 1) % self.cache_size
             i += 1
         victim = pos
         if self.verbose:
-            self.history.append((threshold,i))
+            self.history.append((threshold, i))
 
         self.cache_sum -= self.cacheline_list[victim][WEIGHT]
 
@@ -168,8 +163,6 @@ class EEvASeq(Cache):
         self.hand = victim
         self.cacheline_list[victim][REQ_ID] = -1
         return
-
-
 
     def access(self, req_item, **kwargs):
         """
@@ -195,10 +188,10 @@ class EEvASeq(Cache):
             w = self._get_init_weight(req_item)
             if len(self.cacheline_dict) >= self.cache_size:
                 llen = len(self.cacheline_dict)
-                evict_item = self.evict(w)
+                _ = self.evict(w)
                 assert llen > len(self.cacheline_dict), "item is not deleted"
             self._insert(req_item, w)
-            
+
             self._update_init_weight(req_item)
             return False
 
@@ -212,19 +205,21 @@ class EEvASeq(Cache):
         if self.verbose:
             return self.history
         return []
+
     @property
     def name(self):
         if hasattr(self, "_name"):
             return self._name
         else:
-            print('vtf man??')
+            print("vtf man??")
             raise ValueError()
 
     @name.setter
     def name(self, n):
-        self._name  = n
+        self._name = n
 
     def __repr__(self):
         return f"PROPOSED:{self.alpha=}_{self.beta=}"
+
     def __str__(self):
         return "PROPOSED:alpha={}_beta={}".format(self.alpha, self.beta)

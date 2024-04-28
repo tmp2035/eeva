@@ -6,7 +6,7 @@
     \begin{subfigure}{$w2\linewidth}
         \includegraphics[width=\textwidth]{figures/experiments/$p2}
     \end{subfigure}
-    
+
     \caption{$caption}
     \label{fig::$label}
 \end{figure*}
