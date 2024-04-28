@@ -4,6 +4,20 @@ This repository contains the code for the paper "EEvA: Fast expert-based page ev
 
 ![Demo](./assets/compare_image.png)
 
+## Table of Contents
+1. [Installation Guideline](#installation-guideline)
+   - [Full Installation](#full-installation)
+   - [Partial Installation](#partial-installation)
+2. [Usage Guideline](#usage-guideline)
+   - [With Docker](#with-docker)
+   - [Without Docker](#without-docker)
+3. [Configuration File](#configuration-file)
+   - [Description of Parameters](#description-of-parameters)
+4. [Data Generation Procedure and Trace Structure](#data-generation-procedure-and-trace-structure)
+   - [Generation](#generation)
+   - [Trace Structure](#trace-structure)
+5. [Code Structure](#code-structure)
+
 ## Installation Guideline
 
 There are two installation options:
