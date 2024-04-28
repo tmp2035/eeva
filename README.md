@@ -129,41 +129,40 @@ To run experiments select the
 ## Code Structure
 
 The project is structured as follows:
-
-```
-./cache/
-├── __init__.py
-├── algorithm
-│   ├── __init__.py
-│   ├── abstractCache.py
-│   ├── eeva.py
-│   ├── eeva_seq.py
-│   ├── eeva_t.py
-│   ├── proposed.py
-│   └── requestItem.py
-├── config
-│   ├── __init__.py
-│   └── config.py
-├── runners
-│   ├── __init__.py
-│   ├── experiment_runner.py
-│   ├── libCache_runner.py
-│   └── proposed_runner.py
-└── utils
+    ./cache/
     ├── __init__.py
-    ├── costs_calc.py
-    ├── drawer.py
-    ├── req_generator.py
-    ├── time_checker.py
-    └── trace_utils.py
+    ├── algorithm
+    │   ├── __init__.py
+    │   ├── abstractCache.py
+    │   ├── eeva.py
+    │   ├── eeva_seq.py
+    │   ├── eeva_t.py
+    │   ├── proposed.py
+    │   └── requestItem.py
+    ├── config
+    │   ├── __init__.py
+    │   └── config.py
+    ├── runners
+    │   ├── __init__.py
+    │   ├── experiment_runner.py
+    │   ├── libCache_runner.py
+    │   └── proposed_runner.py
+    └── utils
+        ├── __init__.py
+        ├── costs_calc.py
+        ├── drawer.py
+        ├── req_generator.py
+        ├── time_checker.py
+        └── trace_utils.py
 
-./experiment_helpers/
-├── fig_image.pdf
-├── run_config.py
-├── run_grid_experiment.py
-├── script_user.ipynb
-└── scripts/
-```
+And there are functions to run experiments:
+    ./experiment_helpers/
+    ├── fig_image.pdf
+    ├── run_config.py
+    ├── run_grid_experiment.py
+    ├── script_user.ipynb
+    └── scripts/
+
 
 - `./cache/`: Contains the main project code.
 - `./experiment_helpers/`: Contains scripts and utilities for running experiments.
