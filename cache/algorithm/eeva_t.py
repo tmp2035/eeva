@@ -1,9 +1,5 @@
 # coding=utf-8
 
-"""
-    this is implementation of proposef algorighm with many deleted elements per iteration
-"""
-
 import numpy as np
 from dataclasses import dataclass
 import scipy
@@ -13,12 +9,11 @@ from .abstractCache import Cache
 from .requestItem import Req
 
 
-from random import randint
 import numpy as np
 from dataclasses import dataclass, field
 import scipy
 
-from collections import OrderedDict, deque, defaultdict
+from collections import defaultdict
 from .abstractCache import Cache
 from .requestItem import Req, parse_info
 
@@ -48,30 +43,19 @@ class EEvAT(Cache):
     w = w * (1 - gamma)     # on iteration
 
     self.cacheline_dict [item_id: item_pos]
-    self.cacheline_deq [item_pos: (table_id)]
-
-    self.table_weights [table_id: table_weight, list(loaded pages)]
+    self.table_weights: [table_id: table_weight, list(loaded pages)]
     """
 
-    def __init__(self, cache_size,alpha , beta , pow = 2, with_min = True, **kwargs):
-        self.scans = 0
+    def __init__(self, cache_size,alpha , beta , **kwargs):
         super(EEvAT,self).__init__(cache_size, **kwargs)
-        self.cacheline_dict = dict()
-        self.with_min = with_min
         self.table_weights = defaultdict(table_item)
+        self.cacheline_dict = dict()
 
         self.alpha = alpha
         self.beta = beta
         self.step = 0
-        self.pow = pow
-
-        self.table_max = -1
-        self.page_max = -1
-        self.max_value = 1e3
 
         self._scan_proccessing = False
-        self._scan_table = None
-        # assert "k" in kwargs.keys(), 'parameter k is not setted'
 
     def has(self, req_id, **kwargs):
         """
@@ -85,7 +69,7 @@ class EEvAT(Cache):
             return False
 
     def _get_init_weight(self, req_item):
-        req_type, table_num, _, _ = parse_info(req_item.info)
+        _, table_num, _, _ = parse_info(req_item.info)
         return self.table_weights[table_num].weight
     def _update_init_weight(self, req_item):
         req_type, table_num, pg_ind, table_size = parse_info(req_item.info)
@@ -102,20 +86,13 @@ class EEvAT(Cache):
         """ the given element is in the cache,
         now update cache metadata and its content
 
+        for EEvA-t this function do nothing because only table weights are used
+
         :param **kwargs:
         :param req_item:
         :return: None
         """
         return
-        # req_id = req_item
-        # if isinstance(req_item, Req):
-        #     req_id = req_item.item_id
-
-        # list_pos = self.cacheline_dict[req_id]
-
-        # req_type, table_num, _, table_size = parse_info(req_item.info)
-
-        # self.cacheline_list[list_pos][WEIGHT] = self.table_weights[table_num]
 
     def _insert(self, req_item, w, **kwargs):
         """
@@ -146,8 +123,8 @@ class EEvAT(Cache):
            **kwargs:
         :return: id of evicted cacheline
         """
-        victim_table = min(self.table_weights.items(), key= lambda x: x[1].weight if len(x[1].pages) > 0 else float("inf"))[1]
-        # print(victim_table, victim,self.table_pages[victim_table], "\n", self.table_pages)
+        victim_table = min(self.table_weights.items(), \
+                    key= lambda x: x[1].weight if len(x[1].pages) > 0 else float("inf"))[1]
         victim = victim_table.pages[0]
         del victim_table.pages[0]
 
@@ -163,7 +140,6 @@ class EEvAT(Cache):
         :param req_item: the request from the trace, it can be in the cache, or not
         :return: None
         """
-        # self._normalize()
         self.step += 1
 
         req_id = req_item
@@ -192,7 +168,6 @@ class EEvAT(Cache):
         else:
             print('vtf man??')
             raise ValueError()
-        # return f"PROPOSED:{self.alpha=}_{self.beta=}"
 
     @name.setter
     def name(self, n):

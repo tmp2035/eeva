@@ -1,7 +1,8 @@
 # coding=utf-8
 """
     An abstract cache for cache replacement algorithms
-    Author: Jason Yang <peter.waynechina@gmail.com> 2016/05
+    cache algorithm template from https://github.com/1a1a11a/PyMimircache
+    Author: Jason Yang <peter.waynechina@gmail.com> 2016/05    
 """
 from numba import jit
 import abc

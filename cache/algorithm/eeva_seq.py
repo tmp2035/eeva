@@ -1,8 +1,5 @@
 # coding=utf-8
 
-"""
-    this is implementation of proposef algorighm with many deleted elements per iteration
-"""
 
 
 
@@ -40,10 +37,10 @@ class EEvASeq(Cache):
         self.scans = 0
         super(EEvASeq, self).__init__(cache_size, **kwargs)
         self.cacheline_list = -np.ones(shape=(cache_size, 3), dtype=float)
-        self.hand = 0
-        self.cacheline_dict = dict()
-
         self.table_weights = defaultdict(dict_def_val)
+        self.cacheline_dict = dict()
+        self.hand = 0
+
 
         self.alpha = alpha
         self.beta = beta
@@ -222,7 +219,6 @@ class EEvASeq(Cache):
         else:
             print('vtf man??')
             raise ValueError()
-        # return f"PROPOSED:{self.alpha=}_{self.beta=}"
 
     @name.setter
     def name(self, n):

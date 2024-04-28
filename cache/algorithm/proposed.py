@@ -1,7 +1,7 @@
 # coding=utf-8
-
 """
-    this class is a template for eeva and eeva-greedy
+    this class is a template for eeva and eeva-greedy.
+    they differ only while selecting victim
 """
 from numba import jit
 from random import randint
@@ -12,7 +12,6 @@ import scipy
 from collections import OrderedDict, deque, defaultdict
 from .abstractCache import Cache
 from .requestItem import Req, parse_info
-
 
 
 @dataclass
@@ -28,12 +27,10 @@ REQ_ID = 0
 WEIGHT = 1
 AGE = 2
 
-def dict_def_val():
-    return 1.
 
 class PROPOSED(Cache):
     """
-    PROPOSED algorithm for cache eviction
+    Class for algorithms EEvA and EEvA-greedy
 
     weights update:
 
@@ -43,16 +40,14 @@ class PROPOSED(Cache):
     self.cacheline_dict [item_id: item_pos]
     self.cacheline_deq [item_pos: (req_id, weight, last_call_step)]
     """
-
-    def __init__(self, cache_size,alpha , beta , with_min = False, **kwargs):
-        self.scans = 0
+    def __init__(self, cache_size, alpha , beta , with_min = False, **kwargs):
         super(PROPOSED, self).__init__(cache_size, **kwargs)
         self.cacheline_list = -np.ones(shape=(cache_size, 3), dtype=float)
-        self.hand = 0
+        self.table_weights = defaultdict(lambda: 1.)
         self.cacheline_dict = dict()
+        self.hand = 0
         self.with_min = with_min
 
-        self.table_weights = defaultdict(dict_def_val)
 
         self.alpha = alpha
         self.beta = beta
@@ -63,8 +58,6 @@ class PROPOSED(Cache):
         self.max_value = 1e3
 
         self._scan_proccessing = False
-        self._scan_table = None
-        # assert "k" in kwargs.keys(), 'parameter k is not setted'
 
     def _normalize(self):
         mm = max(self.table_max, self.page_max)
@@ -86,7 +79,7 @@ class PROPOSED(Cache):
             return False
 
     def _get_init_weight(self, req_item):
-        req_type, table_num, _, _ = parse_info(req_item.info)
+        _, table_num, _, _ = parse_info(req_item.info)
         return self.table_weights[table_num]
     def _update_init_weight(self, req_item):
         req_type, table_num, pg_ind, table_size = parse_info(req_item.info)
@@ -135,6 +128,7 @@ class PROPOSED(Cache):
         if isinstance(req_item, Req):
             req_id = req_item.item_id
 
+        # check that hand in proper position
         assert int(self.cacheline_list[self.hand][0]) == -1
 
         self.cacheline_dict[req_id] = self.hand
@@ -154,15 +148,14 @@ class PROPOSED(Cache):
         :return: id of evicted cacheline
         """
         if self.with_min:
-            # print(self.step, self.cacheline_list[:,[REQ_ID, WEIGHT]])            
-            # victim = PROPOSED.get_min(self.cacheline_list, WEIGHT)
+            # this is for EEvA-greedy
             victim = np.argmin(self.cacheline_list[:, WEIGHT])
         else:
+            # this is for EEvA 
             p = scipy.special.softmax(-self.cacheline_list[:,WEIGHT])
             victim = np.random.choice(range(len(self.cacheline_list)), p = p)
 
         self.cacheline_dict.pop(int(self.cacheline_list[victim][REQ_ID]))
-        # self.weight_history.put(self.cacheline_list[victim][REQ_ID], self.cacheline_list[victim][WEIGHT])
         self.hand = victim
         self.cacheline_list[victim][REQ_ID] = -1
         if self.cacheline_list[victim][WEIGHT] >= self.table_max:
