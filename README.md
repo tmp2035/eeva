@@ -115,9 +115,6 @@ To generate requests we do the following:
 Since we test both \texttt{get}-type and \texttt{scan}-type queries, we introduce the probability of the \texttt{scan}-type query $p_{scan} = 0.002$, i.e., a \texttt{scan}-type query is quite a rare event.
 
 We consider a trace of queries $Q = \{ q_1, \ldots, q_N\}$, where every query $q_i$ is a set of the queried pages by scan or get operation. Denote by $SQ_i$ and $GQ_i$ the sets of pages from query $q_i$ processed by scan and get operations, respectively, i.e. $q_i = SQ_i \sqcup GQ_i$.
-```
-
-This subsection provides a description of how data is generated for the experiments, using the parameters specified in the configuration file.
 
 ## Usage Guideline
 
