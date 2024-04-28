@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup
 
-packages = ["cache", "cache.algorithm", "cache.config", "cache.runners", "cache.utils"]
+packages = ["eeva", "eeva.algorithm", "eeva.config", "eeva.runners", "eeva.utils"]
 
 package_data = {"": ["*"]}
 

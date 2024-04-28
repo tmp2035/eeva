@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "Cache"
+name = "eeva"
 version = "0.1.0"
 description = ""
 authors = ["tmpuser1233 <ttmp1806@gmail.com>"]

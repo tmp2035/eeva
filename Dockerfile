@@ -11,11 +11,11 @@ RUN apt update && apt-get install -yqq libglib2.0-dev libgoogle-perftools-dev cm
 
 # clone repos
 RUN git clone https://github.com/1a1a11a/libCacheSim -b develop
-RUN git clone https://github.com/tmp2035/cache.git
+RUN git clone https://github.com/tmp2035/eeva.git
 
 
 # build cache
-WORKDIR /cache/
+WORKDIR /eeva/
 RUN pip install -e . --force-reinstall
 
 # build libCacheSim
