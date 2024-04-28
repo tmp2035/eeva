@@ -11,7 +11,7 @@ from IPython.display import display
 from ipywidgets import HBox, Layout, VBox, interactive, widgets
 from omegaconf import OmegaConf
 
-from cache.utils.req_generator import Generator
+from eeva.utils.req_generator import Generator
 
 
 def plot_req(

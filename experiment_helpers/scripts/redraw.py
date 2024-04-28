@@ -1,6 +1,6 @@
 import fire
 
-from cache import Experiment
+from eeva import Experiment
 
 
 def main(path):

@@ -12,7 +12,7 @@ from hydra import compose, initialize
 from joblib import Parallel, delayed
 from tqdm import tqdm
 
-from cache import Experiment
+from eeva import Experiment
 
 
 def runner(cfg, conf_name):

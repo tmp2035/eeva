@@ -4,7 +4,7 @@ from itertools import product
 import fire
 from joblib import Parallel, delayed
 
-from cache import algorithm
+from eeva import algorithm
 
 from ..algorithm.requestItem import Req
 from ..utils.time_checker import timer

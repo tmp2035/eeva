@@ -6,7 +6,7 @@ import warnings
 from pathlib import Path
 from typing import Dict
 
-from cache import Config
+from eeva import Config
 
 from ..utils import drawer as drawer
 from ..utils.costs_calc import count_miss_types
