@@ -126,6 +126,7 @@ To run experiments select the
 ## Code Structure
 
 The project is structured as follows:
+
     ./cache/
     ├── __init__.py
     ├── algorithm
@@ -153,6 +154,7 @@ The project is structured as follows:
         └── trace_utils.py
 
 And there are functions to run experiments:
+
     ./experiment_helpers/
     ├── fig_image.pdf
     ├── run_config.py
