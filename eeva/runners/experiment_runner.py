@@ -10,7 +10,7 @@ from eeva import Config
 
 from ..utils import drawer as drawer
 from ..utils.costs_calc import count_miss_types
-from ..utils.req_generator import Generator
+from ..utils.req_generator import Generator, DynamicGenerator
 from .libCache_runner import run_cachesim_size
 from .proposed_runner import run
 
@@ -48,17 +48,28 @@ class Experiment:
         return exp
 
     @staticmethod
-    def from_config(params: Config, generator: Generator = None):
+    def from_config(params: Config, generator: Generator = None, dynamic_generator = False):
         gen_params = params.generation_params
         if generator is None:
-            generator = Generator(
-                num_requests=gen_params.num_requests,
-                num_tables=gen_params.num_tables,
-                max_pages=gen_params.max_pages,
-                q=gen_params.q,
-                _p_scan=gen_params.p_scan,
-                gamma=gen_params.gamma,
-            )
+            if dynamic_generator is False:
+                generator = Generator(
+                    num_requests=gen_params.num_requests,
+                    num_tables=gen_params.num_tables,
+                    max_pages=gen_params.max_pages,
+                    q=gen_params.q,
+                    _p_scan=gen_params.p_scan,
+                    gamma=gen_params.gamma,
+                )
+            else:
+                generator = DynamicGenerator(
+                    num_requests=gen_params.num_requests,
+                    num_tables=gen_params.num_tables,
+                    max_pages=gen_params.max_pages,
+                    q=gen_params.q,
+                    _p_scan=gen_params.p_scan,
+                    gamma=gen_params.gamma,
+                )
+
 
         libCache_params = {
             "CACHESIM_PATH": params.paths.lib_cache_sim,

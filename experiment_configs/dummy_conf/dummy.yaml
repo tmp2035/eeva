@@ -3,9 +3,9 @@ paths:
   datapath: /runs/data/
   save_path: /runs/run_results/
 generation_params:
-  num_requests: 10
+  num_requests: 30
   num_tables: 1
-  max_pages: 100
+  max_pages: 10
   q: 0.1
   p_scan: 1.
   gamma: 0.0
@@ -15,11 +15,11 @@ cost_params:
 shared_parameters:
   cache_sizes: 10,30,50,99
 libCache_params:
-  algos: lru,cacheus,belady,qdlp,tinylfu
+  algos: lru
   trace_format: csv
   trace_format_params: obj-id-col=1, delimiter=;, has-header=true
 proposed_params:
-  algos: EEvA,EEvAGreedy,EEvAT,EEvASeq
+  algos: EEvAGreedy,EEvAT,EEvASeq,EEvAUCB
   beta: 0.8
   alpha: 1.0
   move_cost: 0.01

@@ -14,9 +14,9 @@ cost_params:
   c_scan: 0.8
   c_get: 1.0
 shared_parameters:
-  cache_sizes: 1,5,10,20,50
+  cache_sizes: 1,5,10,20
 libCache_params:
-  algos: lru,cacheus,belady,qdlp,tinylfu
+  algos: cacheus,qdlp,tinylfu,twoq,arc,sieve
   trace_format: csv
   trace_format_params: obj-id-col=1, delimiter=;, has-header=true
 proposed_params:

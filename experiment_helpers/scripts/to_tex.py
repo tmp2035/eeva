@@ -1,7 +1,7 @@
 import shutil
 from pathlib import Path
 from string import Template
-
+import os
 TEMPLATE = """
 \begin{figure*}[!ht]
     \centering
@@ -17,6 +17,19 @@ TEMPLATE = """
 \end{figure*}
 """
 
+def copy_reg_expression(experiment_paths, to_save_path, parts = list[str]):
+    assert to_save_path.exists(), "Provided path to save is not exist"
+    assert all(p.exists() for p in experiment_paths), "Provided experiment paths is is not exist"
+
+    for part in parts:
+        os.mkdir(to_save_path/part)
+        filenames = []
+        for pp in experiment_paths:
+            for p in pp.rglob(f"*{part}*"):
+                filenames.append(p)
+        for n in filenames:
+            name =   f"{n.parts[-2]}_{n.parts[-1]}"
+            shutil.copyfile(n, to_save_path/part/name)
 
 def prepare_for_tex(experiment_paths=None, to_save_path=Path("../run_plots/")):
     if experiment_paths is None:
