@@ -7,7 +7,7 @@ generation_params:
   num_tables: 50
   max_pages: 100
   q: 0.1
-  p_scan: 0.001
+  p_scan: 0.002
   gamma: 0.0
 cost_params:
   c_scan: 0.75

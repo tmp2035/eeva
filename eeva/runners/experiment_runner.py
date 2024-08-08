@@ -177,14 +177,14 @@ class Experiment:
         else:
             self.rez = proposed_dct
 
-    def run(self):
+    def run(self, alpha=None, beta=None,):
         assert hasattr(
             self, "tracepath"
         ), "tracepath is not specified. Previously generate trace or specify by existing data"
         if not hasattr(self, "cache_sizes") or self.cache_sizes is None:
             self.cache_sizes = self.get_sizes()
         self.run_libCache()
-        self.run_proposed()
+        self.run_proposed(alpha, beta)
         return self.rez
 
     def draw(self):

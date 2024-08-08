@@ -9,7 +9,8 @@ translation = {ord(symb): "" for symb in ")( '"}
 
 
 def parse_info(s):
-    a, b, c, d, _ = s.translate(translation).split(",")
+    assert(len(s) > 0)
+    a, b, c, d, *_ = s.translate(translation).split(",")
     assert a in ["get", "scan_all"], f"getting type {a} is unknown"
     return a, int(b), int(c), int(d)
 

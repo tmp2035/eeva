@@ -46,10 +46,11 @@ linestyles = itertools.cycle([e[1] for e in LINESTYLES])
 def plot_dict(config, rez):
     c_scan, c_get = config.cost_params.c_scan, config.cost_params.c_get
     dct = rez
-
+    
     values = []
     disps = []
-    for i, (p_scan, fixed_scan_rez) in enumerate(dct.items()):
+    c_scans = [(0.9 - 0.01)/9 * i + 0.01 for i in range(10)]
+    for i, (c_scan, (p_scan, fixed_scan_rez)) in enumerate(zip(c_scans, dct.items())):
         for key, x in fixed_scan_rez.items():
             x = np.stack([x[:, 1], x[:, 2] * c_scan + x[:, 3] * c_get, x[:, 2], x[:, 3]], axis=1)
             x_mean = x.mean(axis=0)
