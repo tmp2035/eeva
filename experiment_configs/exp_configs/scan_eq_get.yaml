@@ -3,7 +3,7 @@ paths:
   datapath: /runs/data/
   save_path: /runs/run_results/
 generation_params:
-  num_requests: 100_000
+  num_requests: 1000_000
   num_tables: 50
   max_pages: 100
   q: 0.1

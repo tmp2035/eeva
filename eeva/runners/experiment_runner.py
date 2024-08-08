@@ -5,6 +5,7 @@ import shutil
 import warnings
 from pathlib import Path
 from typing import Dict
+from copy import deepcopy
 
 from eeva import Config
 
@@ -105,6 +106,7 @@ class Experiment:
         self.libCache_params = libCache_params
         self.proposed_params = proposed_params
         self.datapath = Path(params.paths.datapath)
+        self.runs_history = []
         assert self.datapath.exists(), f"folder for data is not exists: {self.datapath}"
 
         self.savepath = Path(params.paths.save_path)
@@ -128,6 +130,7 @@ class Experiment:
         self.cache_sizes = self.get_sizes()
 
     def postprocess(self, dct):
+        self.runs_history.append(deepcopy(dct))
         for key, val in dct.items():
             for i in range(len(val)):
                 tmp = count_miss_types(self.tracepath, val[i][-1])
@@ -222,6 +225,8 @@ class Experiment:
             pickle.dump(self.config, f)
         with open(directory / "database.pickle", "wb") as f:
             pickle.dump(self.generator, f)
+        with open(directory/"runs_history.pickle","wb") as f:
+            pickle.dump(self.runs_history, f)
         with open(directory / "rez.json", "w") as f:
             json.dump(self.rez, f)
         with open(directory / "times.json", "w") as f:
