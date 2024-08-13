@@ -225,11 +225,11 @@ class DynamicGenerator(Generator):
         self.probs_get = probs.copy()
 
         # сначала первая треть сканируется, потом вторая треть
-        self.probs_scan[0, :num_tables_to_scan] *= 10
-        self.probs_scan[1,num_tables_to_scan : 2*num_tables_to_scan] *= 10
+        self.probs_scan[0, :num_tables_to_scan] *= 5
+        self.probs_scan[1,num_tables_to_scan : 3*num_tables_to_scan] *= 5
         # для  get операций сначала на первой трети меньше операций get, потом распределение становится равномерным.
         if self.p_scan != 0.0:
-            self.probs_get[0, :num_tables_to_scan] /= 10
+            self.probs_get[1, : 2 * num_tables_to_scan] /=10
 
         self.probs_get /= np.sum(self.probs_get, axis = 1)[:, None]
         self.probs_scan /= np.sum(self.probs_scan, axis = 1)[:, None]
@@ -268,7 +268,7 @@ class DynamicGenerator(Generator):
         for iter in range(num_requests):
             req = np.random.choice(["get", "scan_all"], p=[1.0 - self.p_scan, self.p_scan])
             if req == "get":
-                probs = self.probs_get[0] if iter < num_requests//2 else self.probs_get[1]
+                probs = self.probs_get[0] if iter < num_requests//4 else self.probs_get[1]
                 # (np.array([num_requests - iter, iter], dtype=float)/num_requests)@ self.probs_get
                 assert len(probs) == self.probs_get.shape[1]
 
@@ -276,7 +276,7 @@ class DynamicGenerator(Generator):
                 p_num = np.random.choice(self.database.table_size(t_num), p=self.database.tables[t_num].distr)
                 requests.append(self.database.get(t_num, p_num))
             if req == "scan_all":
-                probs = self.probs_scan[0] if iter < num_requests//2 else self.probs_scan[1]
+                probs = self.probs_scan[0] if iter < num_requests//4 else self.probs_scan[1]
                 #  (np.array([num_requests - iter, iter], dtype=float)/num_requests)@ self.probs_scan
 
                 t_nums = np.random.choice(self.num_tables, p=probs, size=1, replace=False)

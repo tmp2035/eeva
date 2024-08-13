@@ -3,9 +3,9 @@ paths:
   datapath: /runs/data/
   save_path: /runs/run_results/
 generation_params:
-  num_requests: 500_000
+  num_requests: 400_000
   num_tables: 50
-  max_pages: 1000
+  max_pages: 500
   q: 0.1
   p_scan: 0.002
   gamma: 0.0
@@ -15,7 +15,7 @@ cost_params:
 shared_parameters:
   cache_sizes: "10" #1,5,10,20,50
 libCache_params:
-  algos: lru,cacheus,qdlp,tinylfu
+  algos: cacheus,qdlp,tinylfu,twoq,arc
   trace_format: csv
   trace_format_params: obj-id-col=1, delimiter=;, has-header=true
 proposed_params:

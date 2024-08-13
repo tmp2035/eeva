@@ -5,12 +5,12 @@ paths:
 generation_params:
   num_requests: 4_000_000
   num_tables: 50
-  max_pages: 1000
+  max_pages: 700
   q: 0.1
   p_scan: 0.0018
   gamma: 0.0
 cost_params:
-  c_scan: 0.8
+  c_scan: 0.9
   c_get: 1.0
 shared_parameters:
   cache_sizes: 1,5,10,20

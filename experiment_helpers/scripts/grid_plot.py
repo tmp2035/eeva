@@ -91,6 +91,8 @@ def plot_dict(config, rez):
 
     sns.set_context("paper", font_scale=1.5, rc={"lines.linewidth": 2.5, "axes.grid": True})
     fig, ax, colors = get_fig_set_style(len(dct), (1, 2), figsize=(19, 9))
+
+    m_compare = rez[rez["Algorithm"] == "EEvA-Seq"]
     for i, alg_name in enumerate(rez["Algorithm"].unique()):
         r_tmp = rez[rez["Algorithm"] == alg_name]
         d_tmp = disp[disp["Algorithm"] == alg_name]
@@ -109,7 +111,11 @@ def plot_dict(config, rez):
             plt.show()
 
             """
-            m = r_tmp[col_n]
+            # print(r_tmp[col_n], m_compare[col_n],"\n", (r_tmp[col_n] - m_compare[col_n]))
+            if col_n == "Miss rate":
+                m = r_tmp[col_n].values
+            else:
+                m = (r_tmp[col_n].values - m_compare[col_n].values)/m_compare[col_n].values
             d = d_tmp[col_n] * 0.5
             ax[k].plot(r_tmp["p_scan"], m, label=alg_name, color=colors[i], linestyle=l_style, linewidth=2)
             ax[k].fill_between(
@@ -122,9 +128,9 @@ def plot_dict(config, rez):
             )
     for i in range(2):
         ax[i].ticklabel_format(axis="x", scilimits=[-3, 3])
-        ax[i].set_xlabel(r"$p_{scan}$")
+        ax[i].set_xlabel(r"$c_{scan}$")
         ax[i].grid(True)
-    ax[1].set_ylabel(r"Averaged time cost, $C$")
+    ax[1].set_ylabel(r"Relative time cost, $C$")
     ax[0].set_ylabel("Miss rate")
 
     h, legend_ = ax[0].get_legend_handles_labels()
