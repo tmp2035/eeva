@@ -40,7 +40,9 @@ FONTSIZE = 20
 
 
 def get_fig_set_style(lines_count, shape=(1, 1), figsize=None):
-    colors_list = ["blue", "m", "red", "#0b5509", "y", "black", "m", "black", "y", "c", "g"]
+    # colors_list = [ "indigo", "blue", "grey", "red", "#0b5509", "pink", "coral", "black", "y", "c", "g"]
+    # colors_list = [ "#a0a0a0","#303000","#406080", "#500010","#606030", "#800080", "goldenrod", "goldenrod", "goldenrod"]
+    colors_list = [ "indigo", "blue", "#ff81c0", "red", "#0b8809", "#666666", "goldenrod", "goldenrod", "goldenrod"]
     params = {
         "legend.fontsize": 40,
         "lines.markersize": 10,
@@ -299,7 +301,7 @@ def save_figures(dct: dict, path):
         p = path / f"{name}_image.pdf"
         if p.exists():
             os.remove(p)
-        fig.savefig(str(p), bbox_inches="tight")
+        fig.savefig(str(p), bbox_inches="tight", dpi = DPI)
 
         # data = np.array(fig.canvas.buffer_rgba())
         # weights = [0.2989, 0.5870, 0.1140]
