@@ -20,46 +20,21 @@ This repository contains the code for the paper "Buffer Page Replacement via Mul
 
 ## Installation Guideline
 
-There are two installation options:
+To build and install the package functionality, follow these steps:
 
-### Full Installation
-
-To build and install the package with full functionality, follow these steps:
-
-1. Copy the `Dockerfile` from our repository.
-2. Build the Docker image using the following command:
+1. Download `Dockerfile` from repository 
+2. build the Docker image using the following command:
    ```bash
    docker build -t cache_server -f Dockerfile .
-   ```
-3. Run the Docker container:
-   ```bash
-   docker run -it --name=libcache 1a1a11a/libcachesim:latest bash
    ```
 
    Note: We have made modifications to `libCacheSim/bin/cachesim/sim.c`. For installation, we copy it from our repository and follow the installation guidelines from the original authors.
 
-### Partial Installation
-
-If you prefer not to use Docker or only need the Python functionality, follow these steps:
-
-1. Ensure you have Python 3.11 installed.
-2. Setup the project using Poetry:
-
-   ```bash
-   poetry build
-   ```
-
-   or using setup.py:
-
-   ```bash
-   pip install -e . --force-reinstall
-   ```
-
 ## Usage Guideline
 
-since there are two abilities to install there are two guidlines how compute experiments. Guidlines for running the experiments presented in the article are provided in the file `experiment_running.md`
+Guidlines for running the experiments presented in the article are provided in the file `experiment_running.md`
 
-### With docker
+### How to run commands
 
 There we make directory `runs` to save results outside docker. Connect to the docker via concole:
 
@@ -83,15 +58,6 @@ python3 experiment_helpers/run_config.py ../experiment_configs/exp_configs scan_
 ```
 
 if second argument is not provided programm will run for all `yaml` files in provided directory.
-
-### Without docker
-
-Make folders to save experiments and run experiment:
-
-```bash
-mkdir runs runs/data runs/run_results
-python3 experiment_helpers/run_config.py path_to_configs_folder [config_name]
-```
 
 ## Configuration File
 

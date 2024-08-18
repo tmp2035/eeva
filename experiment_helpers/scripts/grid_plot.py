@@ -78,7 +78,8 @@ def plot_ddict(data, xlabel, relative_name = None):
                 if relative_name is not None:
                     rel_y = data[relative_name][key]
                     rel_y = np.array(rel_y, dtype = float).squeeze()
-                    rel_y = rel_y[:, i]
+                    print()
+                    rel_y = np.mean(rel_y[:, i])
                     tmp_y = (tmp_y - rel_y)/ rel_y * 100
                 
                 try:
@@ -109,8 +110,8 @@ def plot_ddict(data, xlabel, relative_name = None):
         ax[1].set_ylabel(r"Averaged time cost, $C$")
         ax[0].set_ylabel("Miss Rate")
     else:
-        ax[1].set_ylabel(r"Relative time cost, $C$")
-        ax[0].set_ylabel("Relative Miss Rate")
+        ax[1].set_ylabel(r"Relative time cost, $\%$")
+        ax[0].set_ylabel(r"Relative Miss Rate, $\%$")
         
     h, legend_ = ax[0].get_legend_handles_labels()
 
