@@ -9,4 +9,4 @@ run_plots/*
 /run_plots
 /run_results
 **.cachesim
-
+**/ablation/**
