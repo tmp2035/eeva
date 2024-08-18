@@ -8,3 +8,5 @@ run_plots/*
 /run_grid
 /run_plots
 /run_results
+**.cachesim
+

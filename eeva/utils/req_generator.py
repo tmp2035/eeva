@@ -95,7 +95,7 @@ class Generator:
             self.num_pages += size
             self.database.add_table(Table(size, q=self.q))
 
-        num_tables_to_scan = self.num_tables // 3
+        num_tables_to_scan = self.num_tables //3 
         self.num_tables_to_scan = num_tables_to_scan
         probs = np.ones((self.num_tables,))
         self.probs_scan = probs.copy()
@@ -152,6 +152,8 @@ class Generator:
         return scan_probs, get_probs, scan_pages
 
     def name(self):
+        if hasattr(self, "_name"):
+            return self._name
         return f"_{self.num_requests}_{self.num_tables}_{self.max_pages}_{self.q}_{self.p_scan}_{self.gamma}"
 
     def generate_requests(self, num_requests: int | None = None) -> list:

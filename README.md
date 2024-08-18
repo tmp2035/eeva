@@ -1,4 +1,4 @@
-# Cache
+# EEvA
 
 This repository contains the code for the paper "EEvA: Fast expert-based page eviction algorithm for database buffer management".
 
@@ -57,7 +57,7 @@ If you prefer not to use Docker or only need the Python functionality, follow th
 
 ## Usage Guideline
 
-since there are two abilities to install there are two guidlines how compute experiment:
+since there are two abilities to install there are two guidlines how compute experiments. Guidlines for running the experiments presented in the article are provided in the file `experiment_running.md`
 
 ### With docker
 
@@ -71,14 +71,14 @@ mkdir runs runs/data runs/run_results && \
 And inside it choose and run experiment for some configs:
 
 ```bash
-cd cache
+cd eeva
 python3 experiment_helpers/run_config.py path_to_configs_folder [config_name]
 ```
 
 For example:
 
 ```bash
-cd cache
+cd eeva
 python3 experiment_helpers/run_config.py ../experiment_configs/exp_configs scan_eq_get
 ```
 
@@ -92,8 +92,6 @@ Make folders to save experiments and run experiment:
 mkdir runs runs/data runs/run_results
 python3 experiment_helpers/run_config.py path_to_configs_folder [config_name]
 ```
-
-More things that you can run in `/experiment_helpers/script_user.ipynb`
 
 ## Configuration File
 
@@ -201,7 +199,7 @@ Last entry is for future work. For current realization it is important, that sca
 
 The project is structured as follows:
 
-    ./cache/
+    ./eeva/
     ├── __init__.py
     ├── algorithm
     │   ├── __init__.py
@@ -236,5 +234,5 @@ And there are functions to run experiments:
     ├── script_user.ipynb
     └── scripts/
 
-- `./cache/`: Contains the main project code.
+- `./eeva/`: Contains the main project code.
 - `./experiment_helpers/`: Contains scripts and utilities for running experiments.

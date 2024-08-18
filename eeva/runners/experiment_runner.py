@@ -188,10 +188,6 @@ class Experiment:
         return self.rez
 
     def draw(self):
-
-        dct_bar = drawer.plot_bar(self)
-        drawer.save_figures(dct_bar, self.directory)
-
         dct_dencity = drawer.plot_dencity(self)
         drawer.save_figures(dct_dencity, self.directory)
 
@@ -201,8 +197,11 @@ class Experiment:
         dct_rez = drawer.plot_dict_pair(self)
         drawer.save_figures(dct_rez, self.directory)
 
-        times = drawer.plot_time(self)
+        times = drawer.plot_time(self)    
         drawer.save_figures(times, self.directory)
+        
+        dct_bar = drawer.plot_bar(self)
+        drawer.save_figures(dct_bar, self.directory)
 
     def save(self, name: str = "", description: str = "", rewrite=False):
         assert hasattr(

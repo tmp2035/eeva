@@ -59,7 +59,9 @@ def run(
     # n_jobs = 1
     if n_jobs > 1:
         del_sim = delayed(simulate)
-        comp_rez = Parallel(n_jobs=n_jobs, return_as="generator")(del_sim(elem, tracepath) for elem in lst)
+        pool = Parallel(n_jobs=n_jobs, return_as="generator")
+        comp_rez = pool(del_sim(elem, tracepath) for elem in lst)
+        
     else:
         comp_rez = [simulate(elem, tracepath) for elem in lst]
 

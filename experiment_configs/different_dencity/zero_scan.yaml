@@ -1,0 +1,27 @@
+# /cache/home/ilgam/code/libCacheSim/_build
+paths:
+  lib_cache_sim: /libCacheSim/_build/bin/cachesim
+  datapath: /runs/data/
+  save_path: /runs/run_results/
+generation_params:
+  num_requests: 500_000
+  num_tables: 50
+  max_pages: 1000
+  q: 0.1
+  p_scan: 0.00
+  gamma: 0.0
+cost_params:
+  c_scan: 0.8
+  c_get: 1.0
+shared_parameters:
+  cache_sizes: 1,5,10,20
+libCache_params:
+  algos:  cacheus,qdlp,tinylfu,twoq,arc,sieve
+  trace_format: csv
+  trace_format_params: obj-id-col=1, delimiter=;, has-header=true
+proposed_params:
+  algos:  EEvAGreedy,EEvAT,EEvASeq
+  beta: 0.8
+  alpha: 1.0
+  move_cost: 0.0
+  return_trace_hit: true

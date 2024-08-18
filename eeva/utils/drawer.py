@@ -2,9 +2,14 @@ import itertools
 import os
 
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 import numpy as np
 import pandas as pd
 import seaborn as sns
+
+import warnings
+
+warnings.filterwarnings("ignore")
 
 ##################################################################################
 # set there style and etc parameters of firuges
@@ -39,26 +44,29 @@ FIGSIZE = (17, 8)
 FONTSIZE = 20
 
 
-def get_fig_set_style(lines_count, shape=(1, 1), figsize=None):
+def get_fig_set_style(lines_count, shape=(1, 1), figsize=None, params = None):
     # colors_list = [ "indigo", "blue", "grey", "red", "#0b5509", "pink", "coral", "black", "y", "c", "g"]
     # colors_list = [ "#a0a0a0","#303000","#406080", "#500010","#606030", "#800080", "goldenrod", "goldenrod", "goldenrod"]
     colors_list = [ "indigo", "blue", "#ff81c0", "red", "#0b8809", "#666666", "goldenrod", "goldenrod", "goldenrod"]
-    params = {
-        "legend.fontsize": 40,
-        "lines.markersize": 10,
-        "axes.labelsize": 40,
-        "axes.titlesize": 40,
-        "xtick.labelsize": 30,
-        "ytick.labelsize": 30,
-        "font.size": 35,
-        #  "text.usetex": True
-    }
+    if lines_count > 9:
+        colors_list = mpl.colormaps["Paired_r"].colors #[:lines_count]
+    if params is None:
+        params = {
+            "legend.fontsize": 40,
+            "lines.markersize": 10,
+            "axes.labelsize": 40,
+            "axes.titlesize": 40,
+            "xtick.labelsize": 30,
+            "ytick.labelsize": 30,
+            "font.size": 35,
+            #  "text.usetex": True
+        }
     sns.set_context("paper", rc=params)
     # sns.set_context("paper", font_scale=2.5, rc={"lines.linewidth": 2.5})
     if figsize is None:
         fig, ax = plt.subplots(*shape, dpi=DPI)
     else:
-        fig, ax = plt.subplots(*shape, dpi=DPI, figsize=figsize)
+        fig, ax = plt.subplots(*shape, dpi=DPI, figsize=figsize,)
     # plt.rcParams['text.usetex'] = True
     # plt.rcParams['text.latex.unicode'] = True
     plt.grid(which="both")
@@ -73,7 +81,6 @@ def plot_dencity(exp):
     c_scan, c_get = exp.config.cost_params.c_scan, exp.config.cost_params.c_get
     scan_probs, get_probs, _ = exp.generator.get_statistics()
     rez = dict()
-
     fig, ax, colors_list = get_fig_set_style(1)
     # ax.yaxis.set_major_formatter(FormatStrFormatter('%.2e'))
     ax.ticklabel_format(axis="y", scilimits=[-5, -5])
@@ -84,7 +91,6 @@ def plot_dencity(exp):
     ax.plot(scan_probs + get_probs, color=colors_list[0], linewidth=2)
     fig.tight_layout()
     rez["density"] = fig
-
     fig, ax, colors_list = get_fig_set_style(
         1,
     )
@@ -107,7 +113,6 @@ def plot_dencity(exp):
     ax.plot((scan_probs * c_scan + get_probs * (c_get)) / (scan_probs + get_probs), color=colors_list[0], linewidth=2)
     fig.tight_layout()
     rez["mean_cost"] = fig
-
     return rez
 
 
@@ -191,6 +196,34 @@ def plot_dict_pair(
     return {"pair": fig}
 
 
+# plot one bar
+def plot_one_bar(dct, rez, y="Miss rate", **kwargs):
+    fig, ax, colors = get_fig_set_style(len(dct), (1, 1), **kwargs)
+    ax = [ax]
+    sns.barplot(rez, x="size", y=y, hue="Algorithm", ax=ax[0], width=0.6, dodge=True, gap=0.1, palette = colors)
+
+    ax[0].get_legend().remove()
+    for i in range(1):
+        ax[i].set_xlabel("Buffer size, % database size")
+        ax[i].set_ylim([0.0, 1.0])
+        ax[i].grid(True)
+    ax[0].set_ylabel(y)
+
+    h, legend_ = ax[0].get_legend_handles_labels()
+
+    fig.legend(
+        h[:],
+        legend_[:],
+        ncol=3,
+        bbox_to_anchor=(0.0, -0.05, 1, 0.10),
+        loc="outside upper left",
+        mode="expand",
+        borderaxespad=0.0,
+    )
+    fig.tight_layout()
+    return fig
+    
+
 def plot_bar(exp):
     c_scan, c_get = exp.config.cost_params.c_scan, exp.config.cost_params.c_get
     percents = sorted(list(map(int, exp.config.shared_parameters.cache_sizes.split(","))))
@@ -222,9 +255,10 @@ def plot_bar(exp):
     # get figure and plot
     sns.set_context("paper", font_scale=1.5, rc={"lines.linewidth": 2.5, "axes.grid": True})
     # fig, ax = plt.subplots(1, 2, figsize = (17, 8), sharex=True)
+    
     fig, ax, colors = get_fig_set_style(len(dct), (1, 2), figsize=(17, 8))
-    sns.barplot(rez, x="size", y="Miss rate", hue="Algorithm", ax=ax[0], width=0.6, dodge=True, gap=0.1)
-    sns.barplot(rez, x="size", y=r"Averaged time cost, $C$", hue="Algorithm", ax=ax[1], width=0.6, dodge=True, gap=0.1)
+    sns.barplot(rez, x="size", y="Miss rate", hue="Algorithm", ax=ax[0], width=0.6, dodge=True, gap=0.1, palette=colors)
+    sns.barplot(rez, x="size", y=r"Averaged time cost, $C$", hue="Algorithm", ax=ax[1], width=0.6, dodge=True, gap=0.1, palette=colors)
 
     ax[0].get_legend().remove()
     ax[1].get_legend().remove()
@@ -249,37 +283,10 @@ def plot_bar(exp):
 
     fig.tight_layout()
 
-    # plot one bar
-    def plot_one_bar(y="Miss rate"):
-        fig, ax, colors = get_fig_set_style(len(dct), (1, 1), figsize=(8, 8))
-        ax = [ax]
-        sns.barplot(rez, x="size", y=y, hue="Algorithm", ax=ax[0], width=0.6, dodge=True, gap=0.1)
-
-        ax[0].get_legend().remove()
-        for i in range(1):
-            ax[i].set_xlabel("Buffer size, % database size")
-            ax[i].set_ylim([0.0, 1.0])
-            ax[i].grid(True)
-        ax[0].set_ylabel(y)
-
-        h, legend_ = ax[0].get_legend_handles_labels()
-
-        fig.legend(
-            h[:],
-            legend_[:],
-            ncol=3,
-            bbox_to_anchor=(0.0, -0.05, 1, 0.10),
-            loc="outside upper left",
-            mode="expand",
-            borderaxespad=0.0,
-        )
-        fig.tight_layout()
-        return fig
-
     rez = {
         "Barplot": fig,
-        "Barplot_mr": plot_one_bar("Miss rate"),
-        "Barplot_at": plot_one_bar(r"Averaged time cost, $C$"),
+        "Barplot_mr": plot_one_bar(dct, rez, "Miss rate", figsize = (8,8)),
+        "Barplot_at": plot_one_bar(dct, rez, r"Averaged time cost, $C$", figsize = (8,8))
     }
 
     return rez
