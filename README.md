@@ -44,7 +44,7 @@ Guidlines for running the experiments presented in the article are provided in t
 
 ### How to run commands
 
-And inside it choose and run experiment for some configs:
+Inside of the container choose config and run experiment for it:
 
 ```bash
 cd eeva
