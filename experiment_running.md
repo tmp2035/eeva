@@ -8,7 +8,7 @@ Next are the instructions for starting and drawing each experiment. All launches
 python3 experiment_helpers/[experiment_runner_name].py path_to_configs_folder [config_name]
 ```
 
-If there is no config name, then the experiment will start for all configs in this directory.
+If there is no config name, then the experiment will start for all configs in this directory. Configs for experiments are located at ![experiment_configs](./experiment_configs/)
 
 To see how the algorithms work with other parameters, just change the parameters in the specified config.
 
@@ -16,9 +16,9 @@ For most experiments, a drawing script has been made and is presented in ![exper
 
 
 ## different dencity experiments
-These are guidlines for running experiments with various p_scan scenarios. This experiments have config files with names `zero_scan, scan_lower_get,scan_eq_get,scan_greater_get`which corresponds to a scenario without scans, with Low $p_{scan}$, medium $p_{scan}$ and high $p_{scan}$, respectively
 
-configuration files are located at ![experiments_configs/different_dencity](./experiments_configs/different_dencity) with the appropriate filenames.
+These are guidlines for running experiments with various p_scan scenarios. This experiments have config files with names `zero_scan, scan_lower_get,scan_eq_get,scan_greater_get`which corresponds to a scenario without scans, with Low $p_{scan}$, medium $p_{scan}$ and high $p_{scan}$, respectively
+configuration files are located at ![experiment_configs/different_dencity](./experiment_configs/different_dencity) with the appropriate filenames.
 
 to start experiment run:
 
