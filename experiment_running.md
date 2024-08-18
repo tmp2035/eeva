@@ -4,8 +4,8 @@ Please note that you must create a directory to save the results of the experime
 
 Next are the instructions for starting and drawing each experiment. All launches have the form
 
-```
-python 3 experiment_helpers/[experiment_runner_name].py path_to_configs_folder [config_name]
+```bash
+python3 experiment_helpers/[experiment_runner_name].py path_to_configs_folder [config_name]
 ```
 
 If there is no config name, then the experiment will start for all configs in this directory.
