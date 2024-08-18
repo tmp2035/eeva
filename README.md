@@ -40,7 +40,7 @@ Note 2: We have made modifications to `libCacheSim/bin/cachesim/sim.c`. while in
 
 ## Usage Guideline
 
-Guidlines for running the experiments presented in the article are provided in the file `experiment_running.md`
+Guidlines for running the experiments presented in the article are provided in the file ![experiment_running.md](./experiment_running.md)
 
 ### How to run commands
 
