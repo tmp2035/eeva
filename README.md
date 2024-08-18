@@ -34,7 +34,7 @@ mkdir runs runs/data runs/run_results && \
       docker run -v ./runs:/runs -it --name=cache_sim cache_server:latest bash
 ```
 
-Note 1: To draw all the Figures, you will need ti use an `ipynb` file. For this is convenient to connect some ide to the container.
+Note 1: To draw all the Figures, you will need to use an `ipynb` file. For this is convenient to connect some ide to the container.
 
 Note 2: We have made modifications to `libCacheSim/bin/cachesim/sim.c`. while installation via docker, we copy it from our repository and follow the installation guidelines from the original authors.
 
