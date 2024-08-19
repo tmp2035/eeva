@@ -11,6 +11,7 @@ python3 experiment_helpers/[experiment_runner_name].py path_to_configs_folder [c
 If there is no config name, then the experiment will start for all configs in this directory. Configs for experiments are located at ![experiment_configs](./experiment_configs/)
 
 To see how the algorithms work with other parameters, just change the parameters in the specified config.
+For example, to conduct a quick experiment, you can make fewer `num_requests` in the config. The number of requests must be greater than zero.
 
 For most experiments, a drawing script has been made and is presented in ![experiment_helpers/script_user.ipynb](./experiment_helpers/script_user.ipynb), look there to get graphs 
 
@@ -40,7 +41,7 @@ cd /eeva
 python3 experiment_helpers/run_config.py ../experiment_configs/dummy_conf --dynamic=False --dummy=True
 ```
 
-
+then draw them within ![experiment_helpers/script_user.ipynb](./experiment_helpers/script_user.ipynb) section  "plot Worst case scenario"
 ## ablation study
 
 There three experiments with ablation study: variation of the $c_{scan}$ parameter, variation of $p_{scan}$ and variation of the proportion of predominantly scanned tables. Each has its own script to run:
