@@ -51,7 +51,7 @@ def main(config_path=".", conf_name=""):
 
     parr = Parallel(n_jobs=6, return_as="generator")
     del_f = delayed(f)
-    for i in tqdm(range(10), leave=False):
+    for i in tqdm(range(5), leave=False):
         rez = {}
         exp.generate_trace()
         runn = parr(del_f(exp, c_scan) for c_scan in c_scans)
